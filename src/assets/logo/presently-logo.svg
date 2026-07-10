@@ -1,0 +1,53 @@
+<svg
+  width="512"
+  height="512"
+  viewBox="0 0 512 512"
+  fill="none"
+  xmlns="http://www.w3.org/2000/svg"
+>
+  <defs>
+    <linearGradient id="presentlyGradient" x1="64" y1="40" x2="448" y2="472" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#3B82F6"/>
+      <stop offset="100%" stop-color="#2563EB"/>
+    </linearGradient>
+
+    <clipPath id="foldClip">
+      <rect x="0" y="0" width="512" height="512" rx="80"/>
+    </clipPath>
+  </defs>
+
+  <!-- Main P -->
+  <path
+    d="
+      M120 64
+      H292
+      C382 64 448 126 448 216
+      C448 306 382 368 292 368
+      H216
+      V448
+      H120
+      Z
+
+      M216 152
+      V280
+      H292
+      C332 280 352 252 352 216
+      C352 180 332 152 292 152
+      Z
+    "
+    fill="url(#presentlyGradient)"
+  />
+
+  <!-- Fold -->
+  <path
+    d="
+      M120 352
+      L216 256
+      V448
+      H120
+      Z
+    "
+    fill="#1D4ED8"
+    opacity="0.95"
+  />
+</svg>
