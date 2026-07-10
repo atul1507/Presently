@@ -48,17 +48,39 @@ export function useUpload() {
   async function upload() {
     if (!state.file) return;
 
-    dispatch({
-      type: "SET_UPLOADING",
-    });
+    try {
+      dispatch({
+        type: "SET_UPLOADING",
+      });
 
-    /**
-     * API will come here
-     */
+      const formData = new FormData();
+      formData.append("file", state.file);
 
-    dispatch({
-      type: "SET_PROCESSING",
-    });
+      const response = await fetch("/api/presentations/upload", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!response.ok) {
+        throw new Error("Upload failed");
+      }
+
+      const data = await response.json();
+
+      console.log(data);
+
+      window.location.href = `/session/${data.sessionId}`;
+
+      // Next step:
+      // redirect to session page
+    } catch (error) {
+      console.error(error);
+
+      dispatch({
+        type: "SET_ERROR",
+        payload: "Upload failed.",
+      });
+    }
   }
 
   return {
