@@ -1,0 +1,100 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum PresentationStatus {
+  UPLOADING
+  PROCESSING
+  READY
+  FAILED
+}
+
+enum SessionStatus {
+  WAITING
+  CONNECTED
+  PRESENTING
+  ENDED
+}
+
+enum DeviceType {
+  PRESENTER
+  CONTROLLER
+}
+
+model Presentation {
+  id            String               @id @default(cuid())
+  originalName  String
+  storagePath   String
+  pdfPath       String?
+  fileSize      Int
+  totalSlides   Int?
+  status        PresentationStatus   @default(UPLOADING)
+
+  createdAt     DateTime             @default(now())
+  updatedAt     DateTime             @updatedAt
+
+  session        Session?
+
+  @@map("presentations")
+}
+
+model Session {
+  id              String            @id @default(cuid())
+
+  presentationId  String            @unique
+  presentation    Presentation      @relation(fields: [presentationId], references: [id], onDelete: Cascade)
+
+  sessionCode     String            @unique
+  qrToken         String            @unique
+
+  status          SessionStatus     @default(WAITING)
+
+  expiresAt       DateTime
+
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+
+  slideState      SlideState?
+
+  devices         Device[]
+
+  @@map("sessions")
+}
+
+model SlideState {
+  id            String      @id @default(cuid())
+
+  sessionId     String      @unique
+  session       Session     @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+
+  currentSlide  Int         @default(1)
+
+  totalSlides   Int         @default(1)
+
+  isFullscreen  Boolean     @default(false)
+
+  createdAt     DateTime    @default(now())
+
+  updatedAt     DateTime    @updatedAt
+
+  @@map("slide_states")
+}
+
+model Device {
+  id            String        @id @default(cuid())
+
+  sessionId     String
+  session       Session       @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+
+  type          DeviceType
+
+  connectedAt   DateTime      @default(now())
+
+  disconnectedAt DateTime?
+
+  @@map("devices")
+}
