@@ -69,7 +69,7 @@ export function useUpload() {
 
       console.log(data);
 
-      window.location.href = `/session/${data.sessionId}`;
+      window.location.href = `/presentation/${data.presentationId}`;
 
       // Next step:
       // redirect to session page

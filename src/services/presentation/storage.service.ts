@@ -30,3 +30,17 @@ export async function uploadPresentation(file: File) {
     fileSize: file.size,
   };
 }
+
+export async function getPresentationSignedUrl(
+  storagePath: string
+) {
+  const { data, error } = await supabaseAdmin.storage
+    .from(BUCKET)
+    .createSignedUrl(storagePath, 60 * 60);
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  return data.signedUrl;
+}

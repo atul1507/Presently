@@ -20,3 +20,13 @@ export async function createPresentation(
     },
   });
 }
+
+export async function getPresentationById(
+  presentationId: string
+) {
+  return prisma.presentation.findUnique({
+    where: {
+      id: presentationId,
+    },
+  });
+}

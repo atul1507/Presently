@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { uploadPresentation } from "@/services/presentation/storage.service";
 import { createPresentation } from "@/services/presentation/presentation.service";
-import { createSession } from "@/services/presentation/session.service";
+
 
 export async function POST(request: Request) {
   try {
@@ -20,13 +20,9 @@ export async function POST(request: Request) {
 
     const presentation = await createPresentation(upload);
 
-    const session = await createSession(presentation.id);
-
     return NextResponse.json({
       success: true,
       presentationId: presentation.id,
-      sessionId: session.id,
-      sessionCode: session.sessionCode,
     });
 
 

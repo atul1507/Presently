@@ -1,6 +1,6 @@
 export default function MeshGradient() {
   return (
-    <div className="absolute inset-0 -z-40 overflow-hidden">
+    <div className="fixed inset-0 -z-40 overflow-hidden">
      <div className="absolute left-[-10%] top-[-10%] h-[700px] w-[700px] rounded-full bg-blue-500/20 blur-[180px]" />
 
 <div className="absolute right-[-10%] top-[20%] h-[600px] w-[600px] rounded-full bg-sky-400/15 blur-[180px]" />
