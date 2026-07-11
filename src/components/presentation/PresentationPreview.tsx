@@ -1,8 +1,14 @@
 "use client";
 
 import { useState } from "react";
+import dynamic from "next/dynamic";
 
-import PdfViewer from "./PdfViewer";
+const PdfViewer = dynamic(
+  () => import("./PdfViewer"),
+  {
+    ssr: false,
+  }
+);
 
 interface Props {
   presentationId: string;

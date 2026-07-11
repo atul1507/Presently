@@ -1,0 +1,5 @@
+[33m217ed75[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m)[m feat: add presentation overview page and PDF preview foundation
+[33m788f8b1[m feat: implement presentation upload workflow
+[33m011e3bd[m feat(database): setup Prisma with Supabase
+[33m6256fb8[m Initial Commit - Landing Page
+[33mbdaa81d[m Initial commit from Create Next App
