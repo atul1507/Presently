@@ -4,15 +4,19 @@ import { PresentationTemplate } from "./templates";
 
 interface Props {
   template: PresentationTemplate;
+  selected: boolean;
+  onSelect: (id: PresentationTemplate["id"]) => void;
 }
 
 export default function TemplateCard({
   template,
+  selected,
+  onSelect,
 }: Props) {
-  const selected = template.id === "original";
 
   return (
     <button
+    onClick={() => onSelect(template.id)}
       className={`
         group
         rounded-2xl

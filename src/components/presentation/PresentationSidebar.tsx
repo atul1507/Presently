@@ -1,7 +1,16 @@
-import TemplateGrid from "@/components/presentation/TemplateGrid";
+"use client";
+
+import { useState } from "react";
+
+import TemplateGrid from "./TemplateGrid";
+import { TemplateType } from "./templates";
 
 
 export default function PresentationSidebar() {
+
+  const [selectedTemplate, setSelectedTemplate] =
+    useState<TemplateType>("original");
+
   return (
     <aside className="flex h-full min-h-0 flex-col overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm">
 
@@ -23,7 +32,10 @@ export default function PresentationSidebar() {
             Templates
           </h2>
 
-          <TemplateGrid />
+          <TemplateGrid
+            selectedTemplate={selectedTemplate}
+            onTemplateChange={setSelectedTemplate}
+          />
 
         </section>
 
