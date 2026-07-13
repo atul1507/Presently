@@ -1,16 +1,19 @@
 "use client";
 
-import { useState } from "react";
-
-import TemplateGrid from "./TemplateGrid";
+import TemplateGrid from "@/components/presentation/TemplateGrid";
 import { TemplateType } from "./templates";
 
+interface Props {
+  selectedTemplate: TemplateType;
+  onTemplateChange: (
+    template: TemplateType
+  ) => void;
+}
 
-export default function PresentationSidebar() {
-
-  const [selectedTemplate, setSelectedTemplate] =
-    useState<TemplateType>("original");
-
+export default function PresentationSidebar({
+  selectedTemplate,
+  onTemplateChange,
+}: Props) {
   return (
     <aside className="flex h-full min-h-0 flex-col overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm">
 
@@ -34,7 +37,7 @@ export default function PresentationSidebar() {
 
           <TemplateGrid
             selectedTemplate={selectedTemplate}
-            onTemplateChange={setSelectedTemplate}
+            onTemplateChange={onTemplateChange}
           />
 
         </section>
