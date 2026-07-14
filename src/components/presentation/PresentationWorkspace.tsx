@@ -8,25 +8,26 @@ import PresentationPreview from "./PresentationPreview";
 import { TemplateType } from "./templates";
 
 interface Props {
-  presentationId: string;
+    presentationId: string;
 }
 
 export default function PresentationWorkspace({
-  presentationId,
+    presentationId,
 }: Props) {
-  const [selectedTemplate, setSelectedTemplate] =
-    useState<TemplateType>("original");
+    const [selectedTemplate, setSelectedTemplate] =
+        useState<TemplateType>("original");
 
-  return (
-    <div className="grid h-full grid-cols-[minmax(0,40%)_minmax(0,60%)] gap-6 overflow-hidden p-6">
-      <PresentationSidebar
-        selectedTemplate={selectedTemplate}
-        onTemplateChange={setSelectedTemplate}
-      />
+    return (
+        <div className="grid h-full grid-cols-[minmax(0,40%)_minmax(0,60%)] gap-6 overflow-hidden p-6">
+            <PresentationSidebar
+                selectedTemplate={selectedTemplate}
+                onTemplateChange={setSelectedTemplate}
+            />
 
-      <PresentationPreview
-        presentationId={presentationId}
-      />
-    </div>
-  );
+            <PresentationPreview
+                presentationId={presentationId}
+                selectedTemplate={selectedTemplate}
+            />
+        </div>
+    );
 }

@@ -1,82 +1,115 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import {
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 
-import { Document, Page, pdfjs } from "react-pdf";
+import {
+  Document,
+  Page,
+  pdfjs,
+} from "react-pdf";
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
 
-interface PdfViewerProps {
-  presentationId: string;
-  pageNumber: number;
-  onLoadSuccess?: (totalPages: number) => void;
-}
-
-interface PresentationResponse {
+interface Props {
   pdfUrl: string;
+  pageNumber: number;
+  onLoadSuccess?: (pages: number) => void;
 }
 
 export default function PdfViewer({
-  presentationId,
+  pdfUrl,
   pageNumber,
   onLoadSuccess,
-}: PdfViewerProps) {
-  const [pdfUrl, setPdfUrl] = useState<string>();
-  const [loading, setLoading] = useState(true);
+}: Props) {
+  const containerRef =
+    useRef<HTMLDivElement>(null);
+
+  const [containerWidth, setContainerWidth] =
+    useState(0);
+
+  const [containerHeight, setContainerHeight] = useState(0);
+
+  const [pdfDocument, setPdfDocument] =
+    useState<pdfjs.PDFDocumentProxy | null>(null);
+
+  const [pdfScale, setPdfScale] = useState(1);
 
   useEffect(() => {
-    async function loadPresentation() {
-      try {
-        const response = await fetch(
-          `/api/presentations/${presentationId}`
-        );
+    if (!containerRef.current) return;
 
-        if (!response.ok) {
-          throw new Error("Failed to load presentation.");
-        }
+    const observer = new ResizeObserver(
+      ([entry]) => {
+        setContainerWidth(entry.contentRect.width);
 
-        const data: PresentationResponse =
-          await response.json();
-
-        setPdfUrl(data.pdfUrl);
-      } finally {
-        setLoading(false);
+        setContainerHeight(entry.contentRect.height);
       }
+    );
+
+    observer.observe(containerRef.current);
+
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    if (!pdfDocument) return;
+
+    const document = pdfDocument;
+
+    async function measurePage() {
+      const page = await document.getPage(
+        pageNumber
+      );
+
+      const viewport = page.getViewport({
+        scale: 1,
+      });
+
+      const scaleX =
+        containerWidth / viewport.width;
+
+      const scaleY =
+        containerHeight / viewport.height;
+
+      setPdfScale(
+        Math.min(scaleX, scaleY)
+      );
     }
 
-    loadPresentation();
-  }, [presentationId]);
-
-  if (loading) {
-    return (
-      <div className="flex aspect-[16/9] w-[78%] max-w-4xl items-center justify-center rounded-2xl border border-slate-300 bg-slate-50">
-        Loading PDF...
-      </div>
-    );
-  }
-
-  if (!pdfUrl) {
-    return (
-      <div className="flex aspect-[16/9] w-[78%] max-w-4xl items-center justify-center rounded-2xl border border-red-300 bg-red-50 text-red-600">
-        Failed to load PDF.
-      </div>
-    );
-  }
+    measurePage();
+  }, [
+    pdfDocument,
+    pageNumber,
+    containerWidth,
+    containerHeight,
+  ]);
 
   return (
-    <Document
-      file={pdfUrl}
-      loading="Loading PDF..."
-      onLoadSuccess={({ numPages }) =>
-        onLoadSuccess?.(numPages)
-      }
+    <div
+      ref={containerRef}
+      className="flex h-full w-full items-center justify-center overflow-hidden"
     >
-      <Page
-        pageNumber={pageNumber}
-        renderAnnotationLayer={false}
-        renderTextLayer={false}
-        width={900}
-      />
-    </Document>
+      {containerWidth > 0 && (
+        <Document
+          file={pdfUrl}
+          loading="Loading PDF..."
+          onLoadSuccess={(pdf) => {
+            onLoadSuccess?.(pdf.numPages);
+            setPdfDocument(pdf);
+          }}
+        >
+          <Page
+            pageNumber={pageNumber}
+            scale={pdfScale}
+            renderAnnotationLayer={false}
+            renderTextLayer={false}
+            
+          />
+        </Document>
+      )}
+    </div>
   );
 }

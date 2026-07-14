@@ -1,7 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
+
+import { TemplateType } from "./templates";
+import PresentationCanvas from "./PresentationCanvas";
 
 const PdfViewer = dynamic(
   () => import("./PdfViewer"),
@@ -10,16 +13,49 @@ const PdfViewer = dynamic(
   }
 );
 
+interface PresentationResponse {
+  pdfUrl: string;
+}
+
 interface Props {
   presentationId: string;
+  selectedTemplate: TemplateType;
 }
 
 export default function PresentationPreview({
   presentationId,
+  selectedTemplate,
 }: Props) {
   const [pageNumber, setPageNumber] = useState(1);
 
   const [totalPages, setTotalPages] = useState(1);
+
+  const [pdfUrl, setPdfUrl] = useState<string>();
+
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function loadPresentation() {
+      try {
+        const response = await fetch(
+          `/api/presentations/${presentationId}`
+        );
+
+        if (!response.ok) {
+          throw new Error("Failed to load presentation.");
+        }
+
+        const data: PresentationResponse =
+          await response.json();
+
+        setPdfUrl(data.pdfUrl);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    loadPresentation();
+  }, [presentationId]);
 
   function previousPage() {
     setPageNumber((page) => Math.max(page - 1, 1));
@@ -36,9 +72,15 @@ export default function PresentationPreview({
 
       <header className="border-b border-slate-200 px-8 py-6">
 
-        <h2 className="text-2xl font-semibold">
-          Live Preview
-        </h2>
+        <div className="flex items-center justify-between">
+          <h2 className="text-2xl font-semibold">
+            Live Preview
+          </h2>
+
+          <span className="rounded-full bg-slate-100 px-3 py-1 text-sm font-medium capitalize text-slate-600">
+            {selectedTemplate}
+          </span>
+        </div>
 
       </header>
 
@@ -48,12 +90,25 @@ export default function PresentationPreview({
 
           <div className="flex justify-center">
 
-            <PdfViewer
-              presentationId={presentationId}
-              pageNumber={pageNumber}
-              onLoadSuccess={setTotalPages}
-            />
-
+            <PresentationCanvas
+              template={selectedTemplate}
+            >
+              {loading ? (
+                <div className="flex h-full w-full items-center justify-center">
+                  Loading PDF...
+                </div>
+              ) : pdfUrl ? (
+                <PdfViewer
+                  pdfUrl={pdfUrl}
+                  pageNumber={pageNumber}
+                  onLoadSuccess={setTotalPages}
+                />
+              ) : (
+                <div className="flex h-full w-full items-center justify-center text-red-600">
+                  Failed to load PDF.
+                </div>
+              )}
+            </PresentationCanvas>
           </div>
 
           <div className="flex items-center justify-center gap-6">
