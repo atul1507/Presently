@@ -3,29 +3,35 @@
 import { ReactNode } from "react";
 
 import { TemplateType } from "./templates";
+import TemplateBackground from "./canvas/TemplateBackground";
+import BrandingOverlay from "./canvas/BrandingOverlay";
+
+import { BrandingSettings } from "./branding";
 
 interface Props {
-  template: TemplateType;
-  children: ReactNode;
+    template: TemplateType;
+    branding: BrandingSettings;
+    children: ReactNode;
 }
 
 const VIEWPORT_MARGIN = {
-  original: "0%",
-  branded: "14%",
+    original: "0%",
+    branded: "14%",
 } as const;
 
 export default function PresentationCanvas({
-  template,
-  children,
+    template,
+    children,
+    branding,
 }: Props) {
-  const margin =
-    template === "original"
-      ? VIEWPORT_MARGIN.original
-      : VIEWPORT_MARGIN.branded;
+    const margin =
+        template === "original"
+            ? VIEWPORT_MARGIN.original
+            : VIEWPORT_MARGIN.branded;
 
-  return (
-    <div
-      className="
+    return (
+        <div
+            className="
         relative
         aspect-[16/9]
         w-full
@@ -37,25 +43,34 @@ export default function PresentationCanvas({
         bg-slate-100
         shadow-inner
       "
-    >
-      {/* Presentation Viewport */}
+        >
 
-      <div
-        className="
+            <TemplateBackground template={template} />
+
+            {/* Presentation Viewport */}
+
+            <div
+                className="
           absolute
           flex
           items-center
           justify-center
         "
-        style={{
-          top: margin,
-          left: margin,
-          right: margin,
-          bottom: margin,
-        }}
-      >
-        {children}
-      </div>
-    </div>
-  );
+                style={{
+                    top: margin,
+                    left: margin,
+                    right: margin,
+                    bottom: margin,
+                }}
+            >
+                {children}
+            </div>
+
+            <BrandingOverlay
+                template={template}
+                branding={branding}
+            />
+
+        </div>
+    );
 }

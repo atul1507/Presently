@@ -6,6 +6,8 @@ import dynamic from "next/dynamic";
 import { TemplateType } from "./templates";
 import PresentationCanvas from "./PresentationCanvas";
 
+import { BrandingSettings } from "./branding";
+
 const PdfViewer = dynamic(
   () => import("./PdfViewer"),
   {
@@ -20,12 +22,15 @@ interface PresentationResponse {
 interface Props {
   presentationId: string;
   selectedTemplate: TemplateType;
+  branding: BrandingSettings;
 }
 
 export default function PresentationPreview({
   presentationId,
   selectedTemplate,
+  branding,
 }: Props) {
+
   const [pageNumber, setPageNumber] = useState(1);
 
   const [totalPages, setTotalPages] = useState(1);
@@ -92,6 +97,7 @@ export default function PresentationPreview({
 
             <PresentationCanvas
               template={selectedTemplate}
+              branding={branding}
             >
               {loading ? (
                 <div className="flex h-full w-full items-center justify-center">
@@ -135,29 +141,7 @@ export default function PresentationPreview({
 
           </div>
 
-          <div className="rounded-2xl border border-slate-200 p-8">
 
-            <h3 className="text-xl font-semibold">
-              Branding
-            </h3>
-
-            <div className="mt-6 space-y-5">
-
-              <div className="rounded-xl border border-dashed border-slate-300 p-4">
-                Logo
-              </div>
-
-              <div className="rounded-xl border border-dashed border-slate-300 p-4">
-                Heading
-              </div>
-
-              <div className="rounded-xl border border-dashed border-slate-300 p-4">
-                Tagline
-              </div>
-
-            </div>
-
-          </div>
 
         </div>
 

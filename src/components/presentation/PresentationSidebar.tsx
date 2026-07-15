@@ -3,16 +3,28 @@
 import TemplateGrid from "@/components/presentation/TemplateGrid";
 import { TemplateType } from "./templates";
 
+import { BrandingSettings } from "./branding";
+
+import BrandingPanel from "./BrandingPanel";
+
 interface Props {
   selectedTemplate: TemplateType;
   onTemplateChange: (
     template: TemplateType
+  ) => void;
+
+  branding: BrandingSettings;
+
+  onBrandingChange: (
+    branding: BrandingSettings
   ) => void;
 }
 
 export default function PresentationSidebar({
   selectedTemplate,
   onTemplateChange,
+  branding,
+  onBrandingChange,
 }: Props) {
   return (
     <aside className="flex h-full min-h-0 flex-col overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm">
@@ -29,6 +41,8 @@ export default function PresentationSidebar({
           Select a template and personalize your presentation.
         </p>
 
+        {/* Templates */}
+
         <section className="mt-10">
 
           <h2 className="text-xl font-semibold">
@@ -41,6 +55,17 @@ export default function PresentationSidebar({
           />
 
         </section>
+
+        {/* Branding */}
+
+        <div className="mt-10">
+
+          <BrandingPanel
+            branding={branding}
+            onBrandingChange={onBrandingChange}
+          />
+
+        </div>
 
       </div>
 
