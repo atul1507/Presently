@@ -6,6 +6,8 @@ export type LogoShape =
 export interface BrandingSettings {
   logoUrl?: string;
 
+  logoFile?: File;
+
   logoShape: LogoShape;
 
   title: string;
@@ -16,7 +18,7 @@ export interface BrandingSettings {
 export const defaultBranding: BrandingSettings = {
   logoShape: "circle",
 
-  title: "Presentation Title",
+  title: "",
 
-  tagline: "Company Tagline",
+  tagline: "",
 };
