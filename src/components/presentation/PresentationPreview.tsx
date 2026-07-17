@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 
-import { TemplateType } from "./templates";
+import { TemplateId } from "./templates";
 import PresentationCanvas from "./PresentationCanvas";
 
 import { BrandingSettings } from "./branding";
@@ -21,14 +21,16 @@ interface PresentationResponse {
 
 interface Props {
   presentationId: string;
-  selectedTemplate: TemplateType;
+  selectedTemplate: TemplateId;
   branding: BrandingSettings;
+  customColor: string;
 }
 
 export default function PresentationPreview({
   presentationId,
   selectedTemplate,
   branding,
+  customColor,
 }: Props) {
 
   const [pageNumber, setPageNumber] = useState(1);
@@ -98,6 +100,7 @@ export default function PresentationPreview({
             <PresentationCanvas
               template={selectedTemplate}
               branding={branding}
+              customColor={customColor}
             >
               {loading ? (
                 <div className="flex h-full w-full items-center justify-center">

@@ -1,17 +1,20 @@
 "use client";
 
-import { TemplateType } from "../templates";
+import { TemplateId } from "../templates";
+import { PresentationTheme } from "../presentationThemes";
 
 import { BrandingSettings } from "../branding";
 
 interface Props {
-    template: TemplateType;
+    template: TemplateId;
     branding: BrandingSettings;
+    theme: PresentationTheme | null;
 }
 
 export default function BrandingOverlay({
     template,
     branding,
+    theme,
 }: Props) {
     if (template === "original") {
         return null;
@@ -38,21 +41,47 @@ export default function BrandingOverlay({
 
             {branding.title && (
                 <div className="absolute left-1/2 top-5 -translate-x-1/2 text-center">
-                    <h1 className="text-3xl font-bold tracking-tight text-slate-900">
+                    <h1 className="text-3xl font-bold tracking-tight"
+                        style={{
+                            color: theme?.primary,
+                        }}>
                         {branding.title}
                     </h1>
                 </div>
             )}
 
             {branding.title && (
-                <div className="absolute left-1/2 top-14 h-px w-64 -translate-x-1/2 bg-slate-300" />
+                <div
+                    className="absolute left-1/2 top-14 h-px w-64 -translate-x-1/2"
+                    style={{
+                        background: `linear-gradient(
+                            to right,
+                            transparent,
+                            ${theme?.primary},
+                            transparent
+                        )`,
+                    }}
+                />
             )}
 
             {/* Tagline */}
 
             {branding.tagline && (
-                <div className="absolute bottom-[5%] right-[16%] max-w-64 text-right">
-                    <p className="text-sm font-medium tracking-wide text-slate-500">
+                <div className="absolute bottom-[5%] right-[16%] flex max-w-64 flex-col items-end">
+                    <div
+                        className="mb-2 h-px w-24"
+                        style={{
+                            background: `linear-gradient(
+                                to left,
+                                ${theme?.primary},
+                                transparent
+                            )`,
+                        }}
+                    />
+
+                    <p
+                        className="text-right text-sm font-semibold tracking-wide text-slate-700"
+                    >
                         {branding.tagline}
                     </p>
                 </div>

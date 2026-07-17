@@ -1,13 +1,15 @@
 import TemplateCard from "./TemplateCard";
+
 import {
-  templates,
-  TemplateType,
+  templateList,
+  TemplateId,
 } from "./templates";
 
 interface Props {
-  selectedTemplate: TemplateType;
+  selectedTemplate: TemplateId;
+
   onTemplateChange: (
-    template: TemplateType
+    template: TemplateId
   ) => void;
 }
 
@@ -17,7 +19,7 @@ export default function TemplateGrid({
 }: Props) {
   return (
     <div className="mt-5 grid grid-cols-2 gap-4">
-      {templates.map((template) => (
+      {templateList.map((template) => (
         <TemplateCard
           key={template.id}
           template={template}
