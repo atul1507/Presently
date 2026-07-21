@@ -1,5 +1,11 @@
 "use client";
 
+import { useState } from "react";
+
+import { useRouter } from "next/navigation";
+
+import { ArrowLeft, ArrowRight } from "lucide-react";
+
 import TemplateGrid from "@/components/presentation/TemplateGrid";
 import { TemplateId } from "./templates";
 
@@ -7,6 +13,7 @@ import { BrandingSettings } from "./branding";
 
 import BrandingPanel from "./BrandingPanel";
 import CustomColorPicker from "./CustomColorPicker";
+import ConfirmDialog from "./ConfirmDialog";
 
 interface Props {
   selectedTemplate: TemplateId;
@@ -29,6 +36,14 @@ export default function PresentationSidebar({
   customColor,
   onCustomColorChange,
 }: Props) {
+
+
+  const router = useRouter();
+
+  const [showDiscardDialog, setShowDiscardDialog] =
+    useState(false);
+
+
   return (
     <aside className="flex h-full min-h-0 flex-col overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm">
 
@@ -81,6 +96,7 @@ export default function PresentationSidebar({
           <BrandingPanel
             branding={branding}
             onBrandingChange={onBrandingChange}
+            disabled={selectedTemplate === "original"}
           />
 
         </div>
@@ -90,12 +106,33 @@ export default function PresentationSidebar({
       {/* Fixed Footer */}
 
       <div className="border-t border-slate-200 bg-white p-8">
+        <div className="flex gap-4">
+          <button
+            onClick={() => setShowDiscardDialog(true)}
+            className="flex flex-1 items-center justify-center gap-2 rounded-2xl bg-red-600 py-4 font-semibold text-white transition hover:bg-red-700"
+          >
+            <ArrowLeft size={18} />
+            Back
+          </button>
 
-        <button className="w-full rounded-2xl bg-blue-600 py-4 font-semibold text-white transition hover:bg-blue-700">
-          Continue
-        </button>
-
+          <button className="flex flex-1 items-center justify-center gap-2 rounded-2xl bg-blue-600 py-4 font-semibold text-white transition hover:bg-blue-700">
+            Continue
+            <ArrowRight size={18} />
+          </button>
+        </div>
       </div>
+
+      <ConfirmDialog
+        open={showDiscardDialog}
+        title="Discard Presentation?"
+        description="Your uploaded presentation and all customization changes will be permanently discarded."
+        confirmText="Discard"
+        cancelText="Stay"
+        onCancel={() => setShowDiscardDialog(false)}
+        onConfirm={() => {
+          router.push("/");
+        }}
+      />
 
     </aside>
   );
