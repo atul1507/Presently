@@ -26,6 +26,9 @@ interface Props {
 
   customColor: string;
   onCustomColorChange: (color: string) => void;
+
+  onContinue: () => void;
+  isSaving: boolean;
 }
 
 export default function PresentationSidebar({
@@ -35,6 +38,8 @@ export default function PresentationSidebar({
   onBrandingChange,
   customColor,
   onCustomColorChange,
+  onContinue,
+  isSaving
 }: Props) {
 
 
@@ -115,9 +120,19 @@ export default function PresentationSidebar({
             Back
           </button>
 
-          <button className="flex flex-1 items-center justify-center gap-2 rounded-2xl bg-blue-600 py-4 font-semibold text-white transition hover:bg-blue-700">
-            Continue
-            <ArrowRight size={18} />
+          <button
+            onClick={onContinue}
+            disabled={isSaving}
+            className="flex flex-1 items-center justify-center gap-2 rounded-2xl bg-blue-600 py-4 font-semibold text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-60"
+          >
+            {isSaving ? (
+              "Saving..."
+            ) : (
+              <>
+                Continue
+                <ArrowRight size={18} />
+              </>
+            )}
           </button>
         </div>
       </div>

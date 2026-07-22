@@ -36,6 +36,16 @@ model Presentation {
   totalSlides   Int?
   status        PresentationStatus   @default(UPLOADING)
 
+  // Presentation Customization
+template        PresentationTemplate @default(ORIGINAL)
+customColor     String?
+
+brandingTitle   String?
+brandingTagline String?
+
+logoUrl         String?
+logoShape       LogoShape @default(SQUARE)
+
   createdAt     DateTime             @default(now())
   updatedAt     DateTime             @updatedAt
 
@@ -99,4 +109,18 @@ model Device {
   disconnectedAt DateTime?
 
   @@map("devices")
+}
+
+enum PresentationTemplate {
+  ORIGINAL
+  BLUE
+  BLACK
+  GREEN
+  CUSTOM
+}
+
+enum LogoShape {
+  SQUARE
+  ROUNDED
+  CIRCLE
 }

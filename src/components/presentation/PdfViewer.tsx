@@ -4,6 +4,7 @@ import {
   useEffect,
   useRef,
   useState,
+  useMemo,
 } from "react";
 
 import {
@@ -14,7 +15,7 @@ import {
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
 
-// Number of pages to keep pre-rendered on each side of the current page.
+
 const PRELOAD_RADIUS = 2;
 
 interface Props {
@@ -51,11 +52,15 @@ export default function PdfViewer({
     pageNumber + PRELOAD_RADIUS
   );
 
-  const visiblePages = [];
+  const visiblePages = useMemo(() => {
+  const pages: number[] = [];
 
   for (let page = startPage; page <= endPage; page++) {
-    visiblePages.push(page);
+    pages.push(page);
   }
+
+  return pages;
+}, [startPage, endPage]);
 
   useEffect(() => {
     if (!containerRef.current) return;

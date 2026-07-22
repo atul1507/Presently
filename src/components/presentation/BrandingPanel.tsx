@@ -6,6 +6,8 @@ import { Check, Trash2 } from "lucide-react";
 
 import { BrandingSettings } from "./branding";
 
+import { uploadPresentationLogo } from "@/lib/supabase/storage";
+
 interface Props {
   branding: BrandingSettings;
 
@@ -109,18 +111,22 @@ export default function BrandingPanel({
             accept="image/png,image/jpeg,image/svg+xml"
             disabled={disabled}
             className="hidden"
-            onChange={(e) => {
+            onChange={async (e) => {
               const file = e.target.files?.[0];
 
               if (!file) return;
 
-              const imageUrl = URL.createObjectURL(file);
+              try {
+                const logoUrl = await uploadPresentationLogo(file);
 
-              onBrandingChange({
-                ...branding,
-                logoFile: file,
-                logoUrl: imageUrl,
-              });
+                onBrandingChange({
+                  ...branding,
+                  logoFile: file,
+                  logoUrl,
+                });
+              } catch (error) {
+                console.error("Failed to upload logo:", error);
+              }
             }}
           />
 
